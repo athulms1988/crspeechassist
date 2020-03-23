@@ -1,0 +1,26 @@
+.customer-review{background:#fff;padding:0 0 2.8em;max-width:59.177em;margin-left:auto;margin-right:auto}
+.customer-review:before{content:" ";position:absolute;top:0;right:0;bottom:0;left:0;background-color:#fff}
+@media(min-width:75em){.customer-review:before{margin-left:calc((100vw - 69.17647058823529em)/-2);margin-right:calc((100vw - 69.17647058823529em)/-2)}
+}
+.customer-review .row{position:relative}
+.customer-review__flex-wrap{display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex}
+@media screen and (max-width:670px){.customer-review__flex-wrap{display:block}
+}
+.customer-review__item{display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-align:flex-start;-webkit-align-items:flex-start;align-items:flex-start;padding:0 .46875rem;min-height:6.7647em;width:33.33333%}
+.customer-review__item--review{display:block;padding:0 1.1473em}
+@media screen and (max-width:670px){.customer-review__item--review{min-height:auto;width:100%;padding-left:.4em;padding-right:.4em}
+}
+.customer-review__title{font-weight:lighter;font-size:1.17647em;color:#4a4a4a;font-family:"Roboto",sans-serif}
+@media screen and (max-width:670px){.customer-review__title{font-size:1.29412em;line-height:2.13636}
+}
+.customer-review__heading{text-align:center;color:#6e6e6e;font-family:"Roboto",sans-serif;font-size:1.52941em;font-weight:300;margin-bottom:.96154em;margin-top:.96155em}
+@media screen and (max-width:670px){.customer-review__heading{line-height:1.153847}
+}
+.customer-review__heading--highlight{color:#00b67a;font-weight:normal}
+.customer-review__desc{color:#9b9b9b;font-family:"Roboto",sans-serif;font-size:1.058825em;font-weight:300;min-height:5.555555em}
+@media screen and (max-width:670px){.customer-review__desc{min-height:auto;margin-bottom:.8889em}
+}
+.review-rating{list-style:none;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;padding:0;margin-top:1.1765em}
+.review-rating__item{background:url(https://s3-us-west-2.amazonaws.com/flex-manager/test/2019/03/20/review_rating.png) no-repeat;width:1.883em;height:1.883em;background-size:100%;padding:0}
+@media screen and (max-width:670px){.review-rating{margin-bottom:1.2353em}
+}
