@@ -1,6 +1,8 @@
 try {
     var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     var recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.maxAlternatives = 2;
     init();
   }
   catch(e) {
@@ -68,6 +70,10 @@ try {
         else if(count == 2){
           noteContent = noteContent.trim();
           noteContent = noteContent.replace(/\s/g, '/');
+          if(!noteContent.includes("2020")){
+            //noteContent.replace("2018","2020");
+            noteContent.substring(0, noteContent.length - 2).concat("20")
+          }
           if(noteContent.length!==10){
             count = count -1;
             readOutLoud('Please provide correct pickup Date');
@@ -80,7 +86,8 @@ try {
          
         }
         else if(count == 3){
-            noteContent = noteContent.replace(/\s/g, '').substr(0,5);
+            //noteContent = noteContent.replace(/\s/g, '').substr(0,5);
+            noteContent = getTime(noteContent);
             if(noteContent.length!== 5){
               count = count -1;
               readOutLoud('Please provide correct pickup time');
@@ -96,6 +103,10 @@ try {
         else if(count == 4){
           noteContent = noteContent.trim();
           noteContent = noteContent.replace(/\s/g, '/');
+          if(!noteContent.includes("2020")){
+           // noteContent.replace("2018","2020");
+           noteContent.substring(0, noteContent.length - 2).concat("20")
+          }
           if(noteContent.length!==10){
             count = count -1;
             readOutLoud('Please provide correct Dropoff Date');
@@ -107,7 +118,8 @@ try {
          
       }
       else if(count == 5){
-        noteContent = noteContent.replace(/\s/g, '').substr(0,5);
+        //noteContent = noteContent.replace(/\s/g, '').substr(0,5);
+        noteContent = getTime(noteContent);
        
         if(noteContent.length == 5){
           document.getElementById("do-time-select").value = noteContent
@@ -144,6 +156,31 @@ try {
         
     }
   };
+
+  function getTime(content){
+    debugger;
+    var timeCheck = content.replace(/\s/g, '');
+    if(timeCheck.indexOf("a.m")>-1){
+      if(timeCheck.length==8){
+        return '0'+timeCheck.substr(0,4);
+      }
+      else if(timeCheck.length==9){
+        return timeCheck.substr(0,5);
+      }
+    }
+
+    if(timeCheck.indexOf("p.m")>-1){
+      if(timeCheck.length==8){
+        timeCheck= timeCheck.substr(0,4).replace(':','.');
+        timeCheck = 12 + Number(timeCheck);
+        return timeCheck.toString().concat('0').replace(".",":");
+        }
+      else if(timeCheck.length==9){
+        return timeCheck.substr(0,5);
+      }
+    }
+
+  }
   function setLocation(){
     //$('#pickup-typeahead-list .results-item')[0].click()   
    // $('#pickup-typeahead-list').blur(); 
@@ -260,7 +297,7 @@ try {
   });
 
   function init(){
-    responsiveVoice.speak("Welcome to the Carrentals Web Site, Please Command Instructions for Searching Your Car");
+    responsiveVoice.speak("Welcome to the Carrentals Web Site, Please Command Instructions for Searching Your Car.Please click on Icon to give inputs");
   }
 
   $('#init-speech').on('click',function(){
