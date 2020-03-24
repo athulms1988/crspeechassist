@@ -66,7 +66,7 @@ try {
             setTimeout(setPickupTime,2000);
           } else {
             count = count -1;
-            readOutLoud('Please provide correct pickup Date');
+            readOutLoud('Please provide a valid pick up Date');
           }
         }
         else if(count == 3){
@@ -80,7 +80,7 @@ try {
             setTimeout(setDropoffDate,2000);
           } else {
             count = count -1;
-            readOutLoud('Please provide correct pickup time');
+            readOutLoud('Please provide a valid pick up time');
           }
         }
         else if(count == 4){
@@ -94,7 +94,7 @@ try {
             setTimeout(setDropoffTime,2000);
           } else {
             count = count -1;
-            readOutLoud('Please provide correct Dropoff Date');
+            readOutLoud('Please provide a valid drop off date');
           }
         }
         else if(count == 5) {
@@ -108,20 +108,18 @@ try {
             setTimeout(searchClickConfirm,2000);
           } else {
             count = count -1;
-            readOutLoud('Please provide correct Dropoff time');
+            readOutLoud('Please provide a valid drop off time');
           }
         }
         else if(count == 6){
           if(noteContent.includes("yes")){
-          
-
             count = 0;
             readOutLoud('Please wait for the search result');
             setTimeout(searchClick,2000);
           }
           else if(noteContent.includes("no")){
             count = 0;
-            readOutLoud('Please Click on the Icon to change the inputs');
+            readOutLoud('Please Click on the mic icon to restart the voice assistant');
           }
       }
            
@@ -154,6 +152,9 @@ try {
       timeCheck = timeCheck.replace("a", '').replace("p", '').replace("m", '').replaceAll('.','');
       timeArray = timeCheck.split(':');
       if(timeArray.length === 2  && !isNaN(timeArray[0]) && !isNaN(timeArray[0])) {
+        if(timeArray[0].length == 1) {
+          timeArray[0] = "0"+timeArray[0];
+        }
         return timeArray.join(":");
       } else {
         return false;
@@ -258,46 +259,29 @@ try {
 
   function setPickupDate(){
     console.log('pickup date');
-    readOutLoud("Please Let me know ur pickup date for your travel");
-    //responsiveVoice.speak("Please Let me know ur pickup date for your travel");
+    readOutLoud("Please let me know your pick up date");
   }
   function setPickupTime(){
     console.log('pickup time');
-    readOutLoud("Please Let me know ur Time for your travel");
+    readOutLoud("Please let me know your pick up time");
   }
   function setDropoffDate(){
     console.log('dropoff date');
-    readOutLoud("Please Let me know ur Dropoff date for your travel");
+    readOutLoud("Please let me know your drop off date");
   }
   function setDropoffTime(){
     console.log('dropoff time');
-    readOutLoud("Please Let me know ur Dropoff time for your travel ");
+    readOutLoud("Please let me know your drop off time");
   }
   function searchClickConfirm(){
     console.log('confirm search ');
-    readOutLoud("Are you confirming the details?");
+    readOutLoud("Please say yes or no to confirm or cancel the details");
   }
 
   function searchClick(){
     console.log(' search click ');
     $('.search-button').click();
   }
-
-  recognition.onstart = function() {
-    instructions.text('Voice recognition activated. Try speaking into the microphone.');
-  }
-  
-  recognition.onspeechend = function() {
-    instructions.text('You were quiet for a while so voice recognition turned itself off.');
-  }
-  
-  recognition.onerror = function(event) {
-    if(event.error == 'no-speech') {
-      instructions.text('No speech was detected. Try again.');  
-    };
-  }
-  
-  
   
   /*-----------------------------
         App buttons and input 
