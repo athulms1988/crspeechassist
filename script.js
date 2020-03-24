@@ -50,90 +50,80 @@ try {
         count = count+1;
         noteContent = transcript;
         $targetInputPickup = $('input[name="pickup_location"]');
-        pickup = $('input#pickup_location').data('id')
+        pickup = $('input#pickup_location').data('id');
         if(count ==1){
             setLocation();
             setTimeout(setPickupDate,5000);
         }
         else if(count == 2){
           noteContent = noteContent.trim();
-          noteContent = noteContent.replace(/\s/g, '/');
-          if(!noteContent.includes("2020")){
-            //noteContent.replace("2018","2020");
-            noteContent.substring(0, noteContent.length - 2).concat("20")
-          }
-          if(noteContent.length!==10){
-            count = count -1;
-            readOutLoud('Please provide correct pickup Date');
-          }
-          else{
+          noteContent = noteContent.replace("th", "").replace("st", '').replace("nd", '').replace('rd');
+          var pickUpdate = getDate(noteContent)
+          if(pickUpdate) {
+            noteContent = pickUpdate;
             $('#startDateInput').val(noteContent);
             //$('#startDateInput').val('04/04/2020');
             setTimeout(setPickupTime,2000);
+          } else {
+            count = count -1;
+            readOutLoud('Please provide correct pickup Date');
           }
-         
         }
         else if(count == 3){
-            //noteContent = noteContent.replace(/\s/g, '').substr(0,5);
-            noteContent = getTime(noteContent);
-            if(noteContent.length!== 5){
-              count = count -1;
-              readOutLoud('Please provide correct pickup time');
-            }
-            else{
-              document.getElementById("pu-time-select").value = noteContent
-              var dateTime =  $('#startDateInput').val().replace(/\//g, '-')+'T'+noteContent+':00Z';
-              $('input[name="pickup_datetime"]').val(dateTime);
-              setTimeout(setDropoffDate,2000);
-            }
-           
+          noteContent = noteContent.trim();
+          var pickUpTime = getTime(noteContent);
+          if(pickUpTime) {
+            noteContent = pickUpTime;
+            document.getElementById("pu-time-select").value = noteContent;
+            var dateTime =  $('#startDateInput').val().split('/').reverse().join("-")+'T'+noteContent+':00Z';
+            $('input[name="pickup_datetime"]').val(dateTime);
+            setTimeout(setDropoffDate,2000);
+          } else {
+            count = count -1;
+            readOutLoud('Please provide correct pickup time');
+          }
         }
         else if(count == 4){
           noteContent = noteContent.trim();
-          noteContent = noteContent.replace(/\s/g, '/');
-          if(!noteContent.includes("2020")){
-           // noteContent.replace("2018","2020");
-           noteContent.substring(0, noteContent.length - 2).concat("20")
-          }
-          if(noteContent.length!==10){
+          noteContent = noteContent.replace("th", "").replace("st", '').replace("nd", '').replace('rd');
+          var dropOffdate = getDate(noteContent)
+          if(dropOffdate) {
+            noteContent = dropOffdate;
+            $('#endDateInput').val(noteContent);
+            //$('#startDateInput').val('04/04/2020');
+            setTimeout(setDropoffTime,2000);
+          } else {
             count = count -1;
             readOutLoud('Please provide correct Dropoff Date');
           }
-          else if(noteContent.length==10){
-            $('#endDateInput').val(noteContent);
-            setTimeout(setDropoffTime,2000);
+        }
+        else if(count == 5) {
+          noteContent = noteContent.trim();
+          var dropOffTime = getTime(noteContent);
+          if(dropOffTime) {
+            noteContent = dropOffTime;
+            document.getElementById("do-time-select").value = noteContent;
+            var dateTime =  $('#endDateInput').val().split('/').reverse().join("-")+'T'+noteContent+':00Z';
+            $('input[name="dropoff_datetime"]').val(dateTime);
+            setTimeout(searchClickConfirm,2000);
+          } else {
+            count = count -1;
+            readOutLoud('Please provide correct Dropoff time');
           }
-         
-      }
-      else if(count == 5){
-        //noteContent = noteContent.replace(/\s/g, '').substr(0,5);
-        noteContent = getTime(noteContent);
-       
-        if(noteContent.length == 5){
-          document.getElementById("do-time-select").value = noteContent
-          var dateTime =  $('#endDateInput').val().replace(/\//g, '-')+'T'+noteContent+':00Z';
-          $('input[name="dropoff_datetime"]').val(dateTime);
-          setTimeout(searchClickConfirm,2000);
         }
-        else if(noteContent.length!== 5){
-          count = count -1;
-          readOutLoud('Please provide correct Dropoff time');
-        }
-       
-    }
-    else if(count == 6){
-      if(noteContent.includes("yes")){
-       
+        else if(count == 6){
+          if(noteContent.includes("yes")){
+          
 
-        count = 0;
-        readOutLoud('Please wait for the search result');
-        setTimeout(searchClick,2000);
+            count = 0;
+            readOutLoud('Please wait for the search result');
+            setTimeout(searchClick,2000);
+          }
+          else if(noteContent.includes("no")){
+            count = 0;
+            readOutLoud('Please Click on the Icon to change the inputs');
+          }
       }
-      else if(noteContent.includes("no")){
-        count = 0;
-        readOutLoud('Please Click on the Icon to change the inputs');
-      }
-  }
            
       
         //setTimeout(setTime,7000);
@@ -144,30 +134,31 @@ try {
         
     }
   };
+  String.prototype.replaceAll = function(target, replacement) {
+    return this.split(target).join(replacement);
+  };
 
   function getTime(content){
-    debugger;
     var timeCheck = content.replace(/\s/g, '');
-    if(timeCheck.indexOf("a.m")>-1){
-      if(timeCheck.length==8){
-        return '0'+timeCheck.substr(0,4);
+    var timeArray;
+    if(timeCheck.indexOf("p.m") > -1) {
+      timeCheck = timeCheck.replace("a", '').replace("p", '').replace("m", '').replaceAll('.','');
+      timeArray = timeCheck.split(':');
+      if(timeArray.length === 2  && !isNaN(timeArray[0]) && !isNaN(timeArray[0])) {
+        timeArray[0] = ""+(parseInt(timeArray[0]) + 12);
+        return timeArray.join(":");
+      } else {
+        return false;
       }
-      else if(timeCheck.length==9){
-        return timeCheck.substr(0,5);
+    } else {
+      timeCheck = timeCheck.replace("a", '').replace("p", '').replace("m", '').replaceAll('.','');
+      timeArray = timeCheck.split(':');
+      if(timeArray.length === 2  && !isNaN(timeArray[0]) && !isNaN(timeArray[0])) {
+        return timeArray.join(":");
+      } else {
+        return false;
       }
     }
-
-    if(timeCheck.indexOf("p.m")>-1){
-      if(timeCheck.length==8){
-        timeCheck= timeCheck.substr(0,4).replace(':','.');
-        timeCheck = 12 + Number(timeCheck);
-        return timeCheck.toString().concat('0').replace(".",":");
-        }
-      else if(timeCheck.length==9){
-        return timeCheck.substr(0,5);
-      }
-    }
-
   }
   function setLocation(){
     pickupLocation.val(noteContent.trim());
@@ -181,6 +172,88 @@ try {
       $(".noDestinationMsg.noDestinationMsg--pickup").removeClass("hidden");
       $(".noDestinationMsg.noDestinationMsg--pickup").addClass("hidden");
     }, 2000);
+  }
+
+  function getDate(voiceData) {
+    var year = '';
+    var month = '';
+    var day = '';
+    var voiceDataArray = voiceData.split(" ");
+    if(voiceDataArray.length === 3) {
+      voiceDataArray.forEach(function(voice) {
+        if(isNaN(voice)) {
+          month = getMonth(voice)
+        } else if(parseInt(voice) > 31) {
+          year = ""+parseInt(voice);
+          if(year.length != 4) {
+            year = "2020";
+          }
+        } else {
+          day = ""+parseInt(voice);
+          if(day.length === 0) {
+            day = "0"+day;
+          }
+        }
+      });
+      return day+"/"+month+"/"+year;
+    } else {
+      return false;
+    }
+  }
+
+  function getMonth(voice) {
+    var month = "04";
+    switch(voice.toLowerCase()) {
+      case 'january': {
+        month = "01";
+        break;
+      }
+      case 'february': {
+        month = "02";
+        break;
+      }
+      case 'march': {
+        month = "03";
+        break;
+      }
+      case 'april': {
+        month = "04";
+        break;
+      }
+      case 'may': {
+        month = "05";
+        break;
+      }
+      case 'june': {
+        month = "06";
+        break;
+      }
+      case 'july': {
+        month = "07";
+        break;
+      }
+      case 'august': {
+        month = "08";
+        break;
+      }
+      case 'september': {
+        month = "09";
+        break;
+      }
+      case 'october': {
+        month = "10";
+        break;
+      }
+      case 'november': {
+        month = "11";
+        break;
+      }
+      case 'december': {
+        month = "12";
+        break;
+      }
+    }
+    return month;
   }
 
   function setPickupDate(){
