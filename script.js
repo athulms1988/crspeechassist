@@ -8,8 +8,6 @@ try {
     $('.no-browser-support').show();
     $('.app').hide();
   }
-  
-  
   var noteTextarea = $('#note-textarea');
   var pickupLocation = $('#pickup_location');
   var dropoffLocation = $('#dropoff_location');
@@ -60,34 +58,129 @@ try {
         $targetInputPickup = $('input[name="pickup_location"]');
         pickup = $('input#pickup_location').data('id')
         if(count ==1){
+            noteContent = noteContent.trim();
             pickupLocation.val(noteContent);
             $("#pickup_location").focus();
             $("#pickup_location").click();
-            setTimeout(setLocation,3000); 
-            setTimeout(setDate,5000);
+            setTimeout(setLocation,2500); 
+            setTimeout(setPickupDate,5000);
         }
         else if(count == 2){
-            startDate.val(noteContent);
+          noteContent = noteContent.trim();
+          noteContent = noteContent.replace(/\s/g, '/');
+          if(noteContent.length!==10){
+            count = count -1;
+            readOutLoud('Please provide correct pickup Date');
+          }
+          else{
+            $('#startDateInput').val(noteContent);
+            //$('#startDateInput').val('04/04/2020');
+            setTimeout(setPickupTime,2000);
+          }
+         
         }
         else if(count == 3){
-            pickupDatetime.val(noteContent);
+            noteContent = noteContent.replace(/\s/g, '').substr(0,5);
+            if(noteContent.length!== 5){
+              count = count -1;
+              readOutLoud('Please provide correct pickup time');
+            }
+            else{
+              document.getElementById("pu-time-select").value = noteContent
+              var dateTime =  $('#startDateInput').val().replace(/\//g, '-')+'T'+noteContent+':00Z';
+              $('input[name="pickup_datetime"]').val(dateTime);
+              setTimeout(setDropoffDate,2000);
+            }
+           
         }
+        else if(count == 4){
+          noteContent = noteContent.trim();
+          noteContent = noteContent.replace(/\s/g, '/');
+          if(noteContent.length!==10){
+            count = count -1;
+            readOutLoud('Please provide correct Dropoff Date');
+          }
+          else if(noteContent.length==10){
+            $('#endDateInput').val(noteContent);
+            setTimeout(setDropoffTime,2000);
+          }
+         
+      }
+      else if(count == 5){
+        noteContent = noteContent.replace(/\s/g, '').substr(0,5);
+       
+        if(noteContent.length == 5){
+          document.getElementById("do-time-select").value = noteContent
+          var dateTime =  $('#endDateInput').val().replace(/\//g, '-')+'T'+noteContent+':00Z';
+          $('input[name="dropoff_datetime"]').val(dateTime);
+          setTimeout(searchClickConfirm,2000);
+        }
+        else if(noteContent.length!== 5){
+          count = count -1;
+          readOutLoud('Please provide correct Dropoff time');
+        }
+       
+    }
+    else if(count == 6){
+      if(noteContent.includes("yes")){
+       
+
+        count = 0;
+        readOutLoud('Please wait for the search result');
+        setTimeout(searchClick,2000);
+      }
+      else if(noteContent.includes("no")){
+        count = 0;
+        readOutLoud('Please Click on the Icon to change the inputs');
+      }
+  }
            
       
         //setTimeout(setTime,7000);
+        //$('input[name="pickup_datetime"]').val("2021-03-31T10:00:00Z");
+        //$('#startDateInput').val('04/04/2020');
+        //$('#endDateInput').val('04/06/2020');
+
+        
     }
   };
   function setLocation(){
-    $('#pickup-typeahead-list .results-item')[0].click()    
+    //$('#pickup-typeahead-list .results-item')[0].click()   
+   // $('#pickup-typeahead-list').blur(); 
+    //$('#pickup-typeahead-list').click();
+    $('#pickup_location').focusout();
+    $('#pickup_location').click();
+    $('#hero-image').focus();
+    //$('#pickup-typeahead-list.results .results-item')[0].click();
   }
 
-  function setDate(){
-    responsiveVoice.speak("Please Let me know ur date for travel");
+  function setPickupDate(){
+    console.log('pickup date');
+    readOutLoud("Please Let me know ur pickup date for your travel");
+    //responsiveVoice.speak("Please Let me know ur pickup date for your travel");
   }
-  function setTime(){
-    responsiveVoice.speak("Please Let me know ur Time of travel");
+  function setPickupTime(){
+    console.log('pickup time');
+    readOutLoud("Please Let me know ur Time for your travel");
   }
-  
+  function setDropoffDate(){
+    console.log('dropoff date');
+    readOutLoud("Please Let me know ur Dropoff date for your travel");
+  }
+  function setDropoffTime(){
+    console.log('dropoff time');
+    readOutLoud("Please Let me know ur Dropoff time for your travel ");
+  }
+  function searchClickConfirm(){
+    console.log('confirm search ');
+    readOutLoud("Are you confirming the details?");
+  }
+
+  function searchClick(){
+    console.log(' search click ');
+    $('.search-button').click();
+  }
+
   recognition.onstart = function() {
     instructions.text('Voice recognition activated. Try speaking into the microphone.');
   }
@@ -109,10 +202,10 @@ try {
   ------------------------------*/
   
   $('#start-record-btn').on('click', function(e) {
-      debugger;
     if (noteContent.length) {
       noteContent += ' ';
     }
+    readOutLoud("Please Let me know  Your travel Location");
     recognition.start();
   });
   
@@ -181,7 +274,7 @@ try {
   ------------------------------*/
   
   function readOutLoud(message) {
-    message = "Hellooo Please Tell Me your Carrentals Pickup an Dropoff locations";
+    //message = "Hellooo Please Tell Me your Carrentals Pickup an Dropoff locations";
       var speech = new SpeechSynthesisUtterance();
   
     // Set the text and voice attributes.
@@ -194,7 +287,6 @@ try {
   }
 
   function initSpeech(){
-
     message = "Helloo Please Tell Me your Carrentals Pickup an Dropoff locations";
     var speech = new SpeechSynthesisUtterance();
     speech.text = message;
