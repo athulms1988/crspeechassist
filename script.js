@@ -20,15 +20,7 @@ try {
   var instructions = $('#recording-instructions');
   var notesList = $('ul#notes');
   var count = 0;
-  
   var noteContent = '';
-  
-  // Get all notes from previous sessions and display them.
-  var notes = getAllNotes();
-  renderNotes(notes);
-  
-  
-  
   /*-----------------------------
         Voice Recognition 
   ------------------------------*/
@@ -60,12 +52,8 @@ try {
         $targetInputPickup = $('input[name="pickup_location"]');
         pickup = $('input#pickup_location').data('id')
         if(count ==1){
-            noteContent = noteContent.trim();
-            pickupLocation.val(noteContent);
-            $("#pickup_location").focus();
-            $("#pickup_location").click();
-            setTimeout(setLocation,2500); 
-            setTimeout(setPickupDate,5000);
+            setLocation();
+            //setTimeout(setPickupDate,5000);
         }
         else if(count == 2){
           noteContent = noteContent.trim();
@@ -182,13 +170,17 @@ try {
 
   }
   function setLocation(){
-    //$('#pickup-typeahead-list .results-item')[0].click()   
-   // $('#pickup-typeahead-list').blur(); 
-    //$('#pickup-typeahead-list').click();
-    $('#pickup_location').focusout();
-    $('#pickup_location').click();
-    $('#hero-image').focus();
-    //$('#pickup-typeahead-list.results .results-item')[0].click();
+    pickupLocation.val(noteContent.trim());
+    pickupLocation.focus();
+    pickupLocation.click();
+    setTimeout(function() {
+      noteContent = $("a#aria-option-0").text().trim();
+      pickupLocation.val(noteContent);
+      testPublisher.publish("typeahead.resultSelected", {element: [$("a#aria-option-0")]});
+      $(".autocomplete-dropdown.pickup .close")[0].click();
+      $(".noDestinationMsg.noDestinationMsg--pickup").removeClass("hidden");
+      $(".noDestinationMsg.noDestinationMsg--pickup").addClass("hidden");
+    }, 2000);
   }
 
   function setPickupDate(){
@@ -239,69 +231,19 @@ try {
   ------------------------------*/
   
   $('#start-record-btn').on('click', function(e) {
-    if (noteContent.length) {
-      noteContent += ' ';
-    }
-    readOutLoud("Please Let me know  Your travel Location");
-    recognition.start();
+    noteContent = '';
+    count = 0;
+    readOutLoud("Please let me know your pick up location");
   });
   
   
-  $('#pause-record-btn').on('click', function(e) {
-    recognition.stop();
-    instructions.text('Voice recognition paused.');
-  });
-
-  // Sync the text inside the text area with the noteContent variable.
-  noteTextarea.on('input', function() {
-    noteContent = $(this).val();
-  })
-  
-  $('#save-note-btn').on('click', function(e) {
-    recognition.stop();
-  
-    if(!noteContent.length) {
-      instructions.text('Could not save empty note. Please add a message to your note.');
-    }
-    else {
-      // Save note to localStorage.
-      // The key is the dateTime with seconds, the value is the content of the note.
-      saveNote(new Date().toLocaleString(), noteContent);
-  
-      // Reset variables and update UI.
-      noteContent = '';
-      renderNotes(getAllNotes());
-      noteTextarea.val('');
-      instructions.text('Note saved successfully.');
-    }
-        
-  })
-  
-  
-  notesList.on('click', function(e) {
-    e.preventDefault();
-    var target = $(e.target);
-  
-    // Listen to the selected note.
-    if(target.hasClass('listen-note')) {
-      var content = target.closest('.note').find('.content').text();
-      readOutLoud(content);
-    }
-  
-    // Delete note.
-    if(target.hasClass('delete-note')) {
-      var dateTime = target.siblings('.date').text();  
-      deleteNote(dateTime);
-      target.closest('.note').remove();
-    }
-  });
 
   function init(){
     responsiveVoice.speak("Welcome to the Carrentals Web Site, Please Command Instructions for Searching Your Car.Please click on Icon to give inputs");
   }
 
   $('#init-speech').on('click',function(){
-    initSpeech();
+    readOutLoud("Helloo Please Tell Me your Carrentals Pickup an Dropoff locations");
   });
   
   
@@ -313,25 +255,25 @@ try {
   function readOutLoud(message) {
     //message = "Hellooo Please Tell Me your Carrentals Pickup an Dropoff locations";
       var speech = new SpeechSynthesisUtterance();
-  
+      try {
+        recognition.stop();
+      } catch(e) {
+        
+      }
     // Set the text and voice attributes.
       speech.text = message;
       speech.volume = 1;
       speech.rate = 1;
       speech.pitch = 1;
+      speech.onend = function(event) {
+        try {
+          recognition.start();
+        } catch(e) {
+
+        }
+      }
     
       window.speechSynthesis.speak(speech);
-  }
-
-  function initSpeech(){
-    message = "Helloo Please Tell Me your Carrentals Pickup an Dropoff locations";
-    var speech = new SpeechSynthesisUtterance();
-    speech.text = message;
-    speech.volume = 1;
-    speech.rate = 1;
-    speech.pitch = 1;
-    window.speechSynthesis.speak(speech);
-
   }
   
   
@@ -359,33 +301,6 @@ try {
       html = '<li><p class="content">You don\'t have any notes yet.</p></li>';
     }
     notesList.html(html);
-  }
-  
-  
-  function saveNote(dateTime, content) {
-    localStorage.setItem('note-' + dateTime, content);
-  }
-  
-  
-  function getAllNotes() {
-    var notes = [];
-    var key;
-    for (var i = 0; i < localStorage.length; i++) {
-      key = localStorage.key(i);
-  
-      if(key.substring(0,5) == 'note-') {
-        notes.push({
-          date: key.replace('note-',''),
-          content: localStorage.getItem(localStorage.key(i))
-        });
-      } 
-    }
-    return notes;
-  }
-  
-  
-  function deleteNote(dateTime) {
-    localStorage.removeItem('note-' + dateTime); 
   }
   
   
