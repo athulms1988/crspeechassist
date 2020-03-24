@@ -53,7 +53,7 @@ try {
         pickup = $('input#pickup_location').data('id')
         if(count ==1){
             setLocation();
-            //setTimeout(setPickupDate,5000);
+            setTimeout(setPickupDate,5000);
         }
         else if(count == 2){
           noteContent = noteContent.trim();
