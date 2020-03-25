@@ -90,3 +90,59 @@ button:focus {
 @media (max-width: 1200px) {
     #bsaHolder{ display:none;}
 }
+
+@keyframes shake {
+	10%, 90% {
+	  transform: translate3d(-1px, 0, 0);
+	}
+	20%, 80% {
+	  transform: translate3d(2px, 0, 0);
+	}
+	30%, 50%, 70% {
+	  transform: translate3d(-4px, 0, 0);
+	}
+	40%, 60% {
+	  transform: translate3d(4px, 0, 0);
+	}
+}
+
+.feature-widget {
+    position: fixed;
+    bottom: 0.5vh;
+    right: 2vh;
+    font-family: "Roboto Condensed", sans-serif;
+    z-index: 1001;
+    max-width: 500px;
+}
+
+.feature-widget .feature-icon {
+    cursor: pointer;
+    text-align: right;
+    animation: shake 0.82s cubic-bezier(0.36,0.07,0.19,0.97) both infinite;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.feature-widget img {
+    max-width: 100px;
+    text-align: right;
+}
+
+blockquote.bubble { 
+    background-position: center;
+    background-repeat: no-repeat !important;
+    background-size: 100% 100%;
+    margin: 0 auto;
+    text-align: center;
+    box-sizing: content-box;
+    line-height: 1;
+}
+blockquote.electric {
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/electric.svg); 
+    font-size: 1.5em;
+    font-style: italic;
+    padding: 35px 45px 35px 4px;
+    color: #f37121;
+    width: 140px;
+}
