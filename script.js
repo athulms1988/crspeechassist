@@ -59,7 +59,7 @@ try {
           noteContent = noteContent.trim();
           noteContent = noteContent.replace("th", "").replace("st", '').replace("nd", '').replace('rd');
           var pickUpdate = getDate(noteContent)
-          if(pickUpdate && pickUpdate.length == 9) {
+          if(pickUpdate && pickUpdate.length == 10) {
             noteContent = pickUpdate;
             $('#startDateInput').val(noteContent);
             //$('#startDateInput').val('04/04/2020');
@@ -87,7 +87,7 @@ try {
           noteContent = noteContent.trim();
           noteContent = noteContent.replace("th", "").replace("st", '').replace("nd", '').replace('rd');
           var dropOffdate = getDate(noteContent)
-          if(dropOffdate && dropOffdate.length ==9) {
+          if(dropOffdate && dropOffdate.length == 10) {
             noteContent = dropOffdate;
             $('#endDateInput').val(noteContent);
             //$('#startDateInput').val('04/04/2020');
@@ -179,12 +179,12 @@ try {
           month = getMonth(voice)
         } else if(parseInt(voice) > 31) {
           year = ""+parseInt(voice);
-          if(year.length != 4 || year.indexOf("2020") == -1) {
+          if(year.length != 4 || parseInt(year) < 2020) {
             year = "2020";
           }
         } else {
           day = ""+parseInt(voice);
-          if(day.length === 0) {
+          if(day.length === 1) {
             day = "0"+day;
           }
         }
@@ -197,20 +197,21 @@ try {
 
   function getMonth(voice) {
     var month = "04";
-    switch(voice.toLowerCase()) {
-      case 'january': {
+    var monthKey = voice.substring(0,3);
+    switch(monthKey.toLowerCase()) {
+      case 'jan': {
         month = "01";
         break;
       }
-      case 'february': {
+      case 'feb': {
         month = "02";
         break;
       }
-      case 'march': {
+      case 'mar': {
         month = "03";
         break;
       }
-      case 'april': {
+      case 'apr': {
         month = "04";
         break;
       }
@@ -218,31 +219,31 @@ try {
         month = "05";
         break;
       }
-      case 'june': {
+      case 'jun': {
         month = "06";
         break;
       }
-      case 'july': {
+      case 'jul': {
         month = "07";
         break;
       }
-      case 'august': {
+      case 'aug': {
         month = "08";
         break;
       }
-      case 'september': {
+      case 'sep': {
         month = "09";
         break;
       }
-      case 'october': {
+      case 'oct': {
         month = "10";
         break;
       }
-      case 'november': {
+      case 'nov': {
         month = "11";
         break;
       }
-      case 'december': {
+      case 'dec': {
         month = "12";
         break;
       }
