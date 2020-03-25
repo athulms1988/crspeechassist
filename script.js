@@ -3,7 +3,6 @@ try {
     var recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
     recognition.maxAlternatives = 2;
-    init();
   }
   catch(e) {
     console.error(e);
@@ -285,16 +284,6 @@ try {
     noteContent = '';
     count = 0;
     readOutLoud("Please let me know your pick up location");
-  });
-  
-  
-
-  function init(){
-    responsiveVoice.speak("Welcome to the Carrentals Web Site, Please Command Instructions for Searching Your Car.Please click on Icon to give inputs");
-  }
-
-  $('#init-speech').on('click',function(){
-    readOutLoud("Helloo Please Tell Me your Carrentals Pickup an Dropoff locations");
   });
   
   
