@@ -53,13 +53,13 @@ try {
         pickup = $('input#pickup_location').data('id');
         if(count ==1){
             setLocation();
-            setTimeout(setPickupDate,5000);
+            setTimeout(setPickupDate,3500);
         }
         else if(count == 2){
           noteContent = noteContent.trim();
           noteContent = noteContent.replace("th", "").replace("st", '').replace("nd", '').replace('rd');
           var pickUpdate = getDate(noteContent)
-          if(pickUpdate) {
+          if(pickUpdate && pickUpdate.length == 9) {
             noteContent = pickUpdate;
             $('#startDateInput').val(noteContent);
             //$('#startDateInput').val('04/04/2020');
@@ -87,7 +87,7 @@ try {
           noteContent = noteContent.trim();
           noteContent = noteContent.replace("th", "").replace("st", '').replace("nd", '').replace('rd');
           var dropOffdate = getDate(noteContent)
-          if(dropOffdate) {
+          if(dropOffdate && dropOffdate.length ==9) {
             noteContent = dropOffdate;
             $('#endDateInput').val(noteContent);
             //$('#startDateInput').val('04/04/2020');
@@ -119,16 +119,9 @@ try {
           }
           else if(noteContent.includes("no")){
             count = 0;
-            readOutLoud('Please Click on the mic icon to restart the voice assistant');
+            readOutLoud('Please Click on the Assist icon to restart the voice assistant');
           }
       }
-           
-      
-        //setTimeout(setTime,7000);
-        //$('input[name="pickup_datetime"]').val("2021-03-31T10:00:00Z");
-        //$('#startDateInput').val('04/04/2020');
-        //$('#endDateInput').val('04/06/2020');
-
         
     }
   };
@@ -186,7 +179,7 @@ try {
           month = getMonth(voice)
         } else if(parseInt(voice) > 31) {
           year = ""+parseInt(voice);
-          if(year.length != 4) {
+          if(year.length != 4 || year.indexOf("2020") == -1) {
             year = "2020";
           }
         } else {
