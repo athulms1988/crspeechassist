@@ -119,6 +119,9 @@ try {
           else if(noteContent.includes("no")){
             count = 0;
             readOutLoud('Please Click on the Assist icon to restart the voice assistant');
+          } else {
+            count = count -1;
+            readOutLoud("Please say yes or no to confirm or cancel the details");
           }
       }
         
