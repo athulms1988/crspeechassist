@@ -52,7 +52,7 @@ try {
         pickup = $('input#pickup_location').data('id');
         if(count ==1){
             setLocation();
-            setTimeout(setPickupDate,3500);
+            setTimeout(setPickupDate,2000);
         }
         else if(count == 2){
           noteContent = noteContent.trim();
@@ -62,13 +62,14 @@ try {
             noteContent = pickUpdate;
             $('#startDateInput').val(noteContent);
             //$('#startDateInput').val('04/04/2020');
-            setTimeout(setPickupTime,2000);
+            //setTimeout(setPickupTime,2000);
+            setTimeout(setDropoffDate,1000);
           } else {
             count = count -1;
             readOutLoud('Please provide a valid pick up Date');
           }
         }
-        else if(count == 3){
+       /* else if(count == 3){
           noteContent = noteContent.trim();
           var pickUpTime = getTime(noteContent);
           if(pickUpTime) {
@@ -81,8 +82,8 @@ try {
             count = count -1;
             readOutLoud('Please provide a valid pick up time');
           }
-        }
-        else if(count == 4){
+        }*/
+        else if(count == 3){
           noteContent = noteContent.trim();
           noteContent = noteContent.replace("th", "").replace("st", '').replace("nd", '').replace('rd');
           var dropOffdate = getDate(noteContent)
@@ -90,13 +91,14 @@ try {
             noteContent = dropOffdate;
             $('#endDateInput').val(noteContent);
             //$('#startDateInput').val('04/04/2020');
-            setTimeout(setDropoffTime,2000);
+            //setTimeout(setDropoffTime,1000);
+            setTimeout(searchClickConfirm,1000);
           } else {
             count = count -1;
             readOutLoud('Please provide a valid drop off date');
           }
         }
-        else if(count == 5) {
+       /* else if(count == 5) {
           noteContent = noteContent.trim();
           var dropOffTime = getTime(noteContent);
           if(dropOffTime) {
@@ -109,16 +111,18 @@ try {
             count = count -1;
             readOutLoud('Please provide a valid drop off time');
           }
-        }
-        else if(count == 6){
+        }*/
+        else if(count == 4){
           if(noteContent.includes("yes")){
             count = 0;
             readOutLoud('Please wait for the search result');
-            setTimeout(searchClick,2000);
+           // setTimeout(searchClick,1000);
+           searchClick();
           }
           else if(noteContent.includes("no")){
             count = 0;
             readOutLoud('Please Click on the Assist icon to restart the voice assistant');
+            recognition.stop();
           } else {
             count = count -1;
             readOutLoud("Please say yes or no to confirm or cancel the details");
@@ -167,7 +171,7 @@ try {
       $(".autocomplete-dropdown.pickup .close")[0].click();
       $(".noDestinationMsg.noDestinationMsg--pickup").removeClass("hidden");
       $(".noDestinationMsg.noDestinationMsg--pickup").addClass("hidden");
-    }, 2000);
+    }, 1700);
   }
 
   function getDate(voiceData) {
@@ -286,7 +290,7 @@ try {
   $('#start-record-btn').on('click', function(e) {
     noteContent = '';
     count = 0;
-    readOutLoud("Please let me know your pick up location");
+    readOutLoud("Please Tell me your pick up location");
   });
   
   
